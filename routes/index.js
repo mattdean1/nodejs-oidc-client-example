@@ -1,14 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-
 //Middleware that checks if a user is logged in
-function ensureAuthenticated(req, res, next){
+var ensureAuthenticated = function(req, res, next){
   if (req.isAuthenticated()) {
     return next();
   }
     return res.redirect('/openid?redirect=' + req.originalUrl);
-}
+};
+
+module.exports = function(passport){
 
 //Uncomment the following line to require authentication on every page
 //router.use(checkAuthentication());
@@ -20,7 +21,7 @@ router.get('/', function(req, res, next) {
 
 //Private page requires authentication and displays the users OpenId profile information
 router.get('/private',
-  ensureAuthenticated(),
+  ensureAuthenticated,
   function(req, res, next){
     res.render('private', {user: req.user});
   }
@@ -53,4 +54,6 @@ router.get('/openid/callback',
     res.redirect(303, redirect || '/');
   });
 
-module.exports = router;
+
+return router;
+};
