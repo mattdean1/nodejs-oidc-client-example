@@ -1,10 +1,15 @@
 <p>
-  Welcome to the private area {{user.givenName}}!
+  Welcome to the private area {{user.name.givenName}}!
 
   <br>
 
   You are now authenticated with OpenIDConnect.
 </p>
 
-<p> Global ID: {{user.employeeID}} </p>
-<p> Email: {{user.email}} </p>
+<p> ID: {{user.id}} </p>
+<p> Email: {{user._json.email}} </p>
+
+
+<a href="/">Homepage</a>
+<br>
+<a href="/logout">Logout</a>

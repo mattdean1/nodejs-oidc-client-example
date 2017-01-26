@@ -23,7 +23,6 @@ router.get('/', function(req, res, next) {
 router.get('/private',
   ensureAuthenticated,
   function(req, res, next){
-    console.log(req.user);
     res.render('private', {user: req.user});
   }
 );
