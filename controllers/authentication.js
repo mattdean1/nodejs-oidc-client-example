@@ -21,12 +21,12 @@ passport.deserializeUser(function(obj, done) {
  * @type {OpenIdConnectStrategy}
  */
 var openIdConnectStrategy = new OpenIdConnectStrategy({
-        clientID: process.env.IDP_CLIENT_ID,
-        clientSecret: process.env.IDP_CLIENT_SECRET,
-        callbackURL: process.env.IDP_CALLBACK_URL,
-        authorizationURL: process.env.IDP_AUTHORIZE_URL,
-        tokenURL: process.env.IDP_TOKEN_URL,
-        userInfoURL: process.env.IDP_USER_INFO_URL,
+        clientID: process.env.OIDC_CLIENT_ID,
+        clientSecret: process.env.OIDC_CLIENT_SECRET,
+        callbackURL: process.env.OIDC_CALLBACK_URL,
+        authorizationURL: process.env.OIDC_AUTHORIZE_URL,
+        tokenURL: process.env.OIDC_TOKEN_URL,
+        userInfoURL: process.env.OIDC_USER_INFO_URL,
         scope: 'auth_web openid profile email address'
     },
     function(token, tokenSecret, profile, cb) {
