@@ -12,7 +12,7 @@ var ensureAuthenticated = function(req, res, next){
 module.exports = function(passport){
 
 //Uncomment the following line to require authentication on every page
-//router.use(checkAuthentication());
+//router.use(ensureAuthenticated);
 
 //Home page does not require authentication
 router.get('/', function(req, res, next) {
@@ -23,6 +23,7 @@ router.get('/', function(req, res, next) {
 router.get('/private',
   ensureAuthenticated,
   function(req, res, next){
+    console.log(req.user);
     res.render('private', {user: req.user});
   }
 );

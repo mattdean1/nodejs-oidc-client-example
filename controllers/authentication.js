@@ -27,7 +27,7 @@ var openIdConnectStrategy = new OpenIdConnectStrategy({
         authorizationURL: process.env.OIDC_AUTHORIZE_URL,
         tokenURL: process.env.OIDC_TOKEN_URL,
         userInfoURL: process.env.OIDC_USER_INFO_URL,
-        scope: 'auth_web openid profile email address'
+        scope: 'auth_web openid profile email'
     },
     function(token, tokenSecret, profile, cb) {
         // Passing profile info to callback
