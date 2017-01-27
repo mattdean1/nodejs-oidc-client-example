@@ -30,11 +30,12 @@ router.get('/private',
 //Logs the user out and redirects to the home page
 router.get('/logout', function(req, res){
   req.logout();
-  req.session.destroy();
-  res.redirect('/');
+  req.session.destroy(function() {
+    res.redirect('/');
+  });
 });
 
-//Use this when you need to authenticate - you can pass a url to redirect to after authentication as the '?redirect=' param
+//Used to authenticate the user - you can pass a url to redirect to after authentication as the '?redirect=' param
 router.get('/openid', function(req, res, next){
   if (req.query.redirect) {
     req.session.authRedirect = req.query.redirect;
@@ -44,7 +45,7 @@ router.get('/openid', function(req, res, next){
 
 //Callback url given to pingfederate team - this will redirect to the url saved by /openid if one exists
 router.get('/openid/callback',
-  passport.authenticate('openidconnect', { failureRedirect: '/login' }),
+  passport.authenticate('openidconnect', { failureRedirect: '/' }),
   function(req, res) {
     var redirect = req.session.authRedirect;
     if (redirect) {

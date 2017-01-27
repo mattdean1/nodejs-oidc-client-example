@@ -6,25 +6,26 @@ var bodyParser = require('body-parser');
 
 var passport = require('./controllers/authentication.js');
 var routes = require('./routes/index')(passport);
+var session = require('./controllers/session.js');
 
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
+// view engine setup and public static directory
 app.set('view engine', 'hbs');
-
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+// configure express
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(require('cookie-parser')());
-app.use(require('express-session')({ secret: 'secret', resave: true, saveUninitialized: true }));
+app.use(session);
 
-app.use(express.static(path.join(__dirname, 'public')));
 
-//configure authenticated routes
+//configure authentication
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/', routes);
