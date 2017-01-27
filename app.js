@@ -4,10 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 
-var passport = require('./controllers/authentication.js');
-var routes = require('./routes/index')(passport);
-var session = require('./controllers/session.js');
-
 
 var app = express();
 
@@ -22,13 +18,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(session);
-
+app.use(require('./controllers/session.js'));
 
 //configure authentication
-app.use(passport.initialize());
-app.use(passport.session());
-app.use('/', routes);
+require('./controllers/authentication.js')(app);
+
+//import application routes
+app.use('/', require('./routes/index'));
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

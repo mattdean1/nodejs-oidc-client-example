@@ -38,4 +38,37 @@ var openIdConnectStrategy = new OpenIdConnectStrategy({
 passport.use(openIdConnectStrategy);
 
 
-module.exports = passport;
+module.exports = function(app){
+
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  //Logs the user out and redirects to the home page
+  app.get('/logout', function(req, res){
+    req.logout();
+    req.session.destroy(function() {
+      res.redirect('/');
+    });
+  });
+
+  //Used to authenticate the user - you can pass a url to redirect to after authentication as the '?redirect=' param
+  app.get('/openid', function(req, res, next){
+    if (req.query.redirect) {
+      req.session.authRedirect = req.query.redirect;
+    }
+    passport.authenticate('openidconnect')(req, res, next);
+  });
+
+  //Callback url given to pingfederate team - this will redirect to the url saved by /openid if one exists
+  app.get('/openid/callback',
+    passport.authenticate('openidconnect', { failureRedirect: '/' }),
+    function(req, res) {
+      var redirect = req.session.authRedirect;
+      if (redirect) {
+        delete req.session.authRedirect;
+      }
+      //redirect to the specified url if it exists, or root otherwise
+      res.redirect(303, redirect || '/');
+  });
+
+};
