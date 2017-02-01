@@ -14,8 +14,8 @@ if(process.env.AUTHENTICATION_IS_REQUIRED){
     if (req.isAuthenticated()) {
       return next();
     }
-      //If the user is not already authorised, redirect them to authentication
-      return res.redirect('/openid?redirect=' + req.originalUrl);
+    //If the user is not already authorised, redirect them to authentication
+    return res.redirect('/openid?redirect=' + req.originalUrl);
   };
 }
 
