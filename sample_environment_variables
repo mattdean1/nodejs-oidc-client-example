@@ -5,6 +5,9 @@ AUTHENTICATION_IS_REQUIRED=true
 MONGODB_USER=
 MONGODB_PASSWORD=
 MONGODB_DATABASE=database-name
+//host and port are set automatically in OpenShift, but may be different if using another platform
+MONGODB_SERVICE_HOST=
+MONGODB_SERVICE_PORT=
 
 COOKIE_SECRET=changethisvalue
 
