@@ -4,7 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 
-
 var app = express();
 
 // view engine setup and public static directory
@@ -18,10 +17,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+
+//configure session used in express and authentication
 app.use(require('./controllers/session.js'));
 
-//configure authentication
-require('./controllers/authentication.js')(app);
+//configure authentication if required - including callback urls etc.
+if(process.env.AUTHENTICATION_IS_REQUIRED){
+  require('./controllers/authentication.js')(app);
+}
 
 //import application routes
 app.use('/', require('./routes/index'));
