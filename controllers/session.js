@@ -14,14 +14,24 @@ if(user && password && host && port && database){
   var connectionstring = user + ":" + password + "@" + host + ":" + port + "/" + database;
 
     sessionStore = new MongoDBStore(
-    {
-        uri: 'mongodb://' + connectionstring,
-        collection: 'sessions'
-    }
+      {
+          uri: 'mongodb://' + connectionstring,
+          collection: 'sessions'
+      },
+      {
+        //if we can't connect to the database initially fall back to MemoryStore
+        function(error){
+          console.log("Can't connect to mongo");
+          console.log(error);
+        }
+      }
   );
-  // Catch errors
+  // Also catch errors here if store fails while server is up
   sessionStore.on('error', function(error) {
     console.log('Mongo session error: ' + error);
+    session.regenerate(function(error){
+      console.log('Session regenerated');
+    })
   });
 }
 
