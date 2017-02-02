@@ -13,25 +13,25 @@ var database = process.env.MONGODB_DATABASE;
 if(user && password && host && port && database){
   var connectionstring = user + ":" + password + "@" + host + ":" + port + "/" + database;
 
-    sessionStore = new MongoDBStore(
-      {
-          uri: 'mongodb://' + connectionstring,
-          collection: 'sessions'
-      },
-      {
-        //if we can't connect to the database initially fall back to MemoryStore
-        function(error){
-          console.log("Can't connect to mongo");
-          console.log(error);
-        }
+  sessionStore = new MongoDBStore(
+    {
+        uri: 'mongodb://' + connectionstring,
+        collection: 'sessions'
+    },
+    //if we can't connect to the database initially fall back to MemoryStore
+    function(error){
+      if(error){
+        console.log("Can't connect to mongoDB using the provided host information and credentials, falling back to use MemoryStore for session storage");
+        sessionStore = null;
       }
+    }
   );
   // Also catch errors here if store fails while server is up
   sessionStore.on('error', function(error) {
     console.log('Mongo session error: ' + error);
-    session.regenerate(function(error){
-      console.log('Session regenerated');
-    })
+    // session.regenerate(function(error){
+    //   console.log('Session regenerated');
+    // });
   });
 }
 
