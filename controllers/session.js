@@ -34,7 +34,7 @@ if(user && password && host && port && database){
 
 
 var sessionOptions = {
-  saveUninitialized: false, // saved new sessions
+  saveUninitialized: true, // saved new sessions
   resave: false, // do not automatically write to the session store
   store: sessionStore,
   secret: process.env.COOKIE_SECRET,
