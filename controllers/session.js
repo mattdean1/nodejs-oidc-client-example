@@ -1,5 +1,7 @@
 var session = require('express-session');
 var MongoDBStore = require('connect-mongodb-session')(session);
+var MongoClient = require('mongodb').MongoClient;
+
 var sessionStore;
 
 //setup mongo connection values
@@ -9,22 +11,24 @@ var host = process.env.MONGODB_SERVICE_HOST;
 var port = process.env.MONGODB_SERVICE_PORT;
 var database = process.env.MONGODB_DATABASE;
 
-//if we have all the required information, set up a connection to the database
+//Set up a connection to the database, providing we have all the necessary information
 if(user && password && host && port && database){
   var connectionstring = user + ":" + password + "@" + host + ":" + port + "/" + database;
 
-  sessionStore = new MongoDBStore(
-    {
-        uri: 'mongodb://' + connectionstring,
-        collection: 'sessions'
-    },
-    //if we can't connect to the database fall back to MemoryStore
-    function(error){
-      if(error){
-        console.log("Can't connect to mongoDB using the provided host information and credentials, falling back to use MemoryStore for session storage");
-      }
+  //Test database connection - if it works use mongo, otherwise fall back to MemoryStore
+  MongoClient.connect("mongodb://"+connectionstring, function(err, db) {
+    if(err){
+      console.log("Can't connect to mongoDB using the provided host information and credentials, falling back to use MemoryStore for session storage");
     }
-  );
+    else {
+      sessionStore = new MongoDBStore(
+        {
+            uri: 'mongodb://' + connectionstring,
+            collection: 'sessions'
+        }
+      );
+    }
+  });
 }
 
 
