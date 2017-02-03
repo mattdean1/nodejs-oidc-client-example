@@ -25,7 +25,7 @@ app.use(function (req, res, next) {
   if (!req.session) {
     sessionMiddleware(req, res, next);
   }
-  next(); // otherwise continue
+  return next(); // otherwise continue
 });
 
 
