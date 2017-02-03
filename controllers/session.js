@@ -38,6 +38,9 @@ module.exports = function(req, res, next){
           {
               uri: 'mongodb://' + connectionstring,
               collection: 'sessions'
+          },
+          function(e){
+            //catch error
           }
         );
       }
@@ -48,4 +51,4 @@ module.exports = function(req, res, next){
   } else {
     session(sessionOptions)(req, res, next);
   }
-}
+};

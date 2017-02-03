@@ -22,10 +22,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //configure session used in express and authentication
 var sessionMiddleware = require('./controllers/session.js');
 app.use(function (req, res, next) {
-  if (!req.session) {
-    sessionMiddleware(req, res, next);
+  function checkSession(error){
+    if(error){
+      return next(error);
+    }
+
+    if(req.session !== undefined){
+      return next();
+    }
+    
+    sessionMiddleware(req, res, checkSession);
   }
-  next(); // otherwise continue
+
+  checkSession();
 });
 
 
